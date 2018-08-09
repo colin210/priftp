@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title  %}files{% endblock %}
+
+{% block page_content %}
+    <table class="table table-bordered">
+    <tr>
+        <th>文件ID</th>
+        <th>文件名</th>
+        <th>文件MD5</th>
+        <th>删除</th>
+
+
+    </tr>
+        {% for i in files_all %}
+            <tr>
+                <td>{{ i.id }} </td>
+                <td>{{ i.file_name }}</td>
+                <td>{{ i.file_md5 }}</td>
+                <td><a href="{{ url_for('main.delfile',id = i.id) }}" >删除该文件</a></td>
+
+            </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

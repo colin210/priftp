@@ -20,7 +20,7 @@ def index():
         fname = secure_filename(f.filename)
         ext = fname.rsplit('.', 1)[1]
         new_filename = (fname.rsplit('.', 1)[0]) + '.' + ext
-        
+
         if FileGithub.query.filter_by(file_name=new_filename).all():
             res = 'file is exist'
             print('exsit')
@@ -39,3 +39,25 @@ def index():
     return render_template('main/index.html', form=form)
 
 
+@main.route('/files', methods=['GEt', 'POST'])
+def files():
+    all_files = FileGithub.query.all()
+    return render_template('main/files.html', files_all=all_files)
+
+
+@main.route('/delfile/<id>', methods=['GET', 'POST'])
+def delfile(id):
+    file_del = FileGithub.query.get(id)
+    rm_filename = file_dir+'/'+file_del.file_name
+
+    if file_del:
+        try:
+            os.remove(rm_filename)
+
+            db.session.delete(file_del)
+            db.session.commit()
+
+        except Exception as e:
+            print(e)
+            db.session.rollback()
+    return redirect(url_for('main.files'))
